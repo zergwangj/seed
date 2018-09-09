@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <contextName>${appname}</contextName>
+    <!--控制台日志配置-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%red(%d{yyyy-MM-dd HH:mm:ss.SSS}) %green([%thread]) %highlight(%-5level) %magenta(%logger{50}) - %cyan(%msg%n)</pattern>
+        </encoder>
+    </appender>
+    ​
+    <appender name="FILEPROD" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!-- 日志保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread]%-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    ​
+    <appender name="FILETEST" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_FILE}.test.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread]%-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    ​
+    <!--开发环境的日志配置 -->
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+    ​
+    <!--测试环境的日志配置 -->
+    <springProfile name="test">
+        <root level="DEBUG">
+            <appender-ref ref="FILETEST"/>
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+    ​
+    <!--生产环境的日志配置 -->
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="FILEPROD"/>
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+</configuration>
